@@ -6,6 +6,9 @@ const { connectDB } = require('./utils/db');
 const fs = require('fs');
 const path = require('path');
 
+// Carrega o arquivo config.json para obter os IDs dos desenvolvedores
+const config = require('./config.json');
+
 // Verifica se o token foi carregado corretamente
 const token = process.env.DISCORD_TOKEN;
 if (!token) {
@@ -29,6 +32,11 @@ for (const file of commandFiles) {
   const command = require(`./commands/${file}`);
   client.commands.set(command.data.name, command);
   commands.push(command.data.toJSON());  // Registra os comandos para a API
+}
+
+// Função para verificar se o autor da mensagem é um desenvolvedor
+function isDeveloper(userId) {
+  return config.devs.includes(userId);
 }
 
 // Evento que dispara quando o bot está pronto
@@ -68,6 +76,17 @@ client.on('interactionCreate', async interaction => {
   } catch (error) {
     console.error('Erro ao executar comando:', error);
     await interaction.reply({ content: 'Houve um erro ao executar o comando.', ephemeral: true });
+  }
+});
+
+// Evento para verificar se a mensagem foi enviada por um desenvolvedor
+client.on('messageCreate', async message => {
+  if (message.author.bot) return; // Ignora mensagens de bots
+
+  // Verifica se o autor da mensagem é um desenvolvedor
+  if (isDeveloper(message.author.id)) {
+    console.log(`Mensagem de desenvolvedor detectada: ${message.content}`);
+    // Aqui você pode implementar qualquer lógica especial para desenvolvedores
   }
 });
 
