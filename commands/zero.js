@@ -5,6 +5,14 @@ module.exports = {
     name: 'zero',
     description: 'Responde a pergunta do usuário',  // Descrição do comando
     type: 'CHAT_INPUT',  // Tipo do comando (usaremos chat input para interações no chat)
+    options: [
+      {
+        type: 3, // Tipo STRING para capturar a pergunta do usuário
+        name: 'pergunta',
+        description: 'Sua pergunta para o Zero',
+        required: true,
+      },
+    ],
   },
   async execute(interaction) {
     // Verificar se o comando é chamado no formato !Zero "sua pergunta"
