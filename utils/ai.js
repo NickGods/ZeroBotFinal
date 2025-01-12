@@ -16,10 +16,10 @@ module.exports = client => {
       const data = await gemini.findOne({ GuildId: message.guildId });
       if (!data || message.channel.id !== data.ChannelId) return;
 
-      const API_KEY = process.env.GEMINI_API_KEY;
-      const MODEL = 'gemini-pro';
+      const API_KEY = process.env.GEMINI_API_KEY; // A chave da API do Gemini
+      const MODEL = 'gemini-pro'; // Modelo a ser usado (ajuste conforme necessário)
 
-      const ai = new GoogleGenerativeAI(API_KEY);
+      const ai = new GoogleGenerativeAI({ apiKey: API_KEY }); // Passando a chave para o cliente AI
       const model = ai.getGenerativeModel({ model: MODEL });
 
       const botMentioned = message.mentions.has(client.user);
@@ -40,7 +40,7 @@ module.exports = client => {
         content: message.cleanContent,
       });
 
-      channelHistory = channelHistory.slice(-10); 
+      channelHistory = channelHistory.slice(-10); // Mantém as últimas 10 mensagens
       messageHistory.set(message.channel.id, channelHistory);
 
       const contextMessages = channelHistory
